@@ -29,972 +29,998 @@ import net.sf.json.JSONObject;
 
 public final class Tool {
 
-    private static final SimpleDateFormat monthDateFormat = new SimpleDateFormat("yyyy-MM");
-
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-    private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-    private static final SimpleDateFormat noSymbolDateTimeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-
-    private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-
-    private static final SimpleDateFormat minuteFormat = new SimpleDateFormat("mm·Ö");
-
-    private static final SimpleDateFormat timeMillis = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-
-    private static final Random random = new Random();
-    
-    public static boolean isWjDevice(String chargerSerialNum) {
-        return chargerSerialNum != null && chargerSerialNum.startsWith("W") && chargerSerialNum.length() == 14;
-    }
-    /**
-           * ¸ñÊ½»¯µ±ÌìÈÕÆÚ
-     *
-     * @return
-     */
-    public synchronized static String formatTodayDate() {
-        return dateFormat.format(new Date()).replaceAll("-", "");
-    }
-    /**
-           * ´´½¨Ò»¸öuuid
-     *
-     * @return
-     */
-    public static String createUuid() {
-        return UUID.randomUUID().toString().replace("-", "");
-    }
-    /**
-     * µÃµ½×ÊÔ´ÎÄ¼şµÄ¸ùÂ·¾¶
-     * @return
-     */
-    public static String getResourceRoot() { 
-    	return System.getProperty("user.home") + "/"; 
-    }
-    /**
-     * »ñµÃÍ¼Æ¬µÄºó×ºÃû
-     * @param path
-     * @return
-     */
-    public static String getImageExtension(String path) {
-    	int lastIndex = path.lastIndexOf(".");
-        if (lastIndex > 0 && lastIndex > path.lastIndexOf("/")) {
-            String extension = path.substring(lastIndex).toLowerCase();
-            if (".jpg".equals(extension) || ".jpeg".equals(extension) || ".png".equals(extension) || ".gif".equals(extension) || ".bmp".contains(extension)) {
-                return extension;
-            }
-        }
-        return ".jpg";
-    }
-    /**
-     * ½âÎöyyyy-MM-dd¸ñÊ½»òyyyy_MM_dd¸ñÊ½µÄÈÕÆÚ×Ö´®
-     *
-     * @param dateText
-     * @return
-     */
-    public synchronized static Date parseDate(String dateText) {
-        try {
-            return isEmpty(dateText) ? null : dateFormat.parse(dateText.replace("_", "-"));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    /**
-     * ½âÎöyyyy-MM-dd HH:mm:ss¸ñÊ½µÄÈÕÆÚÊ±¼ä×Ö´®
-     *
-     * @param datetimeText
-     * @return
-     */
-    public synchronized static Date parseDatetime(String datetimeText) {
-        try {
-            return isEmpty(datetimeText) ? null : dateTimeFormat.parse(datetimeText);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    /**
-     * ½âÎöÎŞ·ûºÅµÄyyyyMMddHHmmss¸ñÊ½µÄÈÕÆÚÊ±¼ä×Ö´®
-     *
-     * @param noSymbolDatetimeText
-     * @return
-     */
-    public synchronized static Date parseNoSymbolDatetime(String noSymbolDatetimeText) {
-        try {
-            return isEmpty(noSymbolDatetimeText) ? null : noSymbolDateTimeFormat.parse(noSymbolDatetimeText);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    /**
-     * ½«DateÈÕÆÚ¸ñÊ½»¯³Éyyyy-MM¸ñÊ½
-     *
-     * @param date
-     * @return
-     */
-    public synchronized static String formatMonthDate(Date date) {
-        return monthDateFormat.format(date);
-    }
-    /**
-     * ½«DateÈÕÆÚ¸ñÊ½»¯³Éyyyy-MM-dd¸ñÊ½
-     *
-     * @param date
-     * @return
-     */
-    public synchronized static String formatDate(Date date) {
-        return dateFormat.format(date);
-    }
-
-    /**
-     * ½«DateÈÕÆÚ¸ñÊ½»¯³Éyyyy-MM-dd HH:mm:ss¸ñÊ½
-     *
-     * @param date
-     * @return
-     */
-    public synchronized static String formatDateTime(Date date) {
-        return dateTimeFormat.format(date);
-    }
-
-    /**
-     * ½«DateÈÕÆÚ¸ñÊ½»¯³ÉyyyyMMddHHmmss¸ñÊ½
-     *
-     * @param date
-     * @return
-     */
-    public synchronized static String formatNoSymbolDateTime(Date date) {
-        return noSymbolDateTimeFormat.format(date);
-    }
-
-    public static String showDate(Date date) {
-        return date != null ? Tool.formatDate(date) : "";
-    }
-
-    public static String showDateTime(Date date) {
-        return date != null ? Tool.formatDateTime(date) : "";
-    }
-
-    /**
-     * ½«DateÊ±¼ä¸ñÊ½»¯³ÉHH:mm:ss¸ñÊ½
-     *
-     * @param date
-     * @return
-     */
-    public synchronized static String formatTime(Date date) {
-        return timeFormat.format(date);
-    }
-
-    /**
-     * ½«DateÊ±¼ä¸ñÊ½»¯³Émm:ss¸ñÊ½
-     *
-     * @param date
-     * @return
-     */
-    public synchronized static String formatMinute(Date date) {
-        return minuteFormat.format(date);
-    }
-
-    /**
-     * ¼ì²â×Ö·û´®ÊÇ·ñÎª¿Õ
-     *
-     * @param obj
-     * @return
-     */
-    public static boolean isEmpty(String obj) {
-        if (obj == null || "".equals(obj.trim())) {
-            return true;
-        }
-        return false;
-    }
-
-    public static float formatFloat(float data, int digits) {
-        return Float.valueOf(formatData(data, digits)).floatValue();
-    }
-
-    /**
-     * ¸ñÊ½»¯floatÊı¾İ,±£ÁôÒ»Î»Ğ¡Êı
-     *
-     * @param data
-     * @return
-     */
-    public static float formatFloat(float data) {
-        return formatFloat(data, 1);
-    }
-
-    public static String formatData(double data) {
-        return formatData(data, 1);
-    }
-
-    public static String formatData(double data, int digits) {
-        NumberFormat nf = NumberFormat.getInstance(Locale.CHINA);
-        nf.setGroupingUsed(false);
-        nf.setMaximumFractionDigits(digits);
-        return nf.format(data);
-    }
-
-    public static void sleep(long mills) {
-        try {
-            Thread.sleep(mills);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * µ±Ç°Ïß³ÌĞİÃß
-     *
-     * @param seconds Ãë
-     */
-    public static void delay(long seconds) {
-        try {
-            Thread.sleep(seconds * 1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * ½«BooleanÖµ×ª»»³Éjs¿ÉÓÃÅĞ¶Ï
-     *
-     * @param result
-     * @return
-     */
-    public static String toJsBoolean(boolean result) {
-        return result ? "true" : "";
-    }
-
-    /**
-     * ·µ»ØÎŞÈ¨ÏŞ´¦ÀíÊ§°ÜµÄJson·µ»ØÖµ
-     *
-     * @return
-     */
-    public static String getJsonNoPermissionFalseReturn() {
-        return getJsonMsgReturn(false, "noPermission");
-    }
-
-    /**
-     * ·µ»ØeasyuiµÄdatagrid×é½¨ÎŞÊı¾İJson·µ»ØÖµ
-     *
-     * @return
-     */
-    public static String getJsonNoDataGridDataReturn() {
-        return "{\"total\":0,\"rows\":[]}";
-    }
-
-    /**
-     * »ñÈ¡Ò»¸ösuccessÎªtrueµÄJSONObject¶ÔÏó
-     *
-     * @return
-     */
-    public static JSONObject getAppSuccessReturnJSONObject() {
-        JSONObject obj = new JSONObject();
-        obj.put("success", true);
-        return obj;
-    }
-
-    /**
-     * »ñÈ¡Ò»¸ösuccessÎªtrueµÄJSONObject¶ÔÏó
-     *
-     * @return
-     */
-    public static JSONObject getAppFailureReturnJSONObject() {
-        JSONObject obj = new JSONObject();
-        obj.put("success", false);
-        return obj;
-    }
-
-    /**
-     * »ñÈ¡Ò»¸öJson»Ø¸´£¨´ømsg£©
-     *
-     * @param success
-     * @param msg
-     * @return
-     */
-    public static String getJsonMsgReturn(boolean success, String msg) {
-        JSONObject obj = new JSONObject();
-        obj.put("success", success);
-        obj.put("msg", msg);
-        return obj.toString();
-    }
-
-    /**
-     * ¹ıÂËÎÄ×ÖÖĞµÄ´óÓÚºÅ¸úĞ¡ÓÚºÅ¡¢Ë«ÒıºÅ
-     *
-     * @param showText
-     * @return
-     */
-    public static String filterShowText(String showText) {
-        if (Tool.isEmpty(showText)) {
-            return showText;
-        }
-        return showText.replace("<", "").replace(">", "").replace("\"", "").replace("\'", "");
-    }
-
-    /**
-     * ½«intÊı×Ö×ª»»³É¶ÔÓ¦ASCII×Ö·û
-     *
-     * @param data
-     * @return
-     */
-    public static String getStringFromHex(long data) {
-        return new Character((char) data).toString();
-    }
-
-    /**
-     * ×ª»»×Ö·û´®ÎªÈİÒ×ÔÄ¶ÁµÄ16½øÖÆÊı¾İ
-     *
-     * @param command
-     * @return
-     */
-    public static String showData(String command) {
-        if(command == null){
-            return "";
-        }
-        String str = "";
-        for (char c : command.toCharArray()) {
-            String hexString = Integer.toHexString(c);
-            if (hexString.length() == 1) {
-                hexString = "0" + hexString;
-            }
-            str += hexString + " ";
-        }
-        return str.toUpperCase().trim();
-    }
-
-    /**
-     * È¥µô¿¨ºÅÇ°ÃæµÄ0
-     *
-     * @param text
-     * @return
-     */
-    public static String trimZeroFromBegin(String text) {
-        while (text.length() > 1 && text.charAt(0) == 0x30) {
-            text = text.substring(1);
-        }
-        return text;
-    }
-
-    /**
-     * »ñÈ¡¸ßËÄÎ»
-     *
-     * @param data
-     * @return 16½øÖÆ×Ö·û´®
-     */
-    public static String getHeight4(int data) {
-        int height = ((data & 0xf0) >> 4);
-        return Integer.toHexString(height);
-    }
-
-    /**
-     * »ñÈ¡µÍËÄÎ»
-     *
-     * @param data
-     * @return 16½øÖÆ×Ö·û´®
-     */
-    public static String getLow4(int data) {
-        int low = (data & 0x0f);
-        return Integer.toHexString(low);
-    }
-
-    /**
-     * ´´½¨6Î»Ëæ»úÊı×ÖÑéÖ¤Âë
-     *
-     * @return
-     */
-    public static String createRendomVerifyCode() {
-        String verifyCode = "";
-        for (int i = 0; i < 6; i++) {
-            verifyCode += random.nextInt(10);
-        }
-        return verifyCode;
-    }
-
-    /**
-     * ÅäÖÃTokenÔÚ6ÌìÖ®ºó¹ıÆÚ£¨ÓÃÓÚ±¾µØ´¢´ætokenµÄ¿Í»§¶Ë£¬±ÜÃâÊ¹ÓÃ¹ı³ÌÖĞToken³¬Ê±£©
-     *
-     * @param tokenCreateTime
-     * @return
-     */
-    public static synchronized boolean isTokenForSaveTimeout(Date tokenCreateTime) {
-        Calendar now = Calendar.getInstance();
-        // ÓÃ»§tokenÓĞĞ§ÆÚ¸ÄÎªÒ»ÖÜ
-        now.add(Calendar.DATE, -6);
-        return now.getTime().after(tokenCreateTime);
-    }
-
-    /**
-     * ÅäÖÃTokenÔÚ7ÌìÖ®ºó¹ıÆÚ
-     *
-     * @param tokenCreateTime
-     * @return
-     */
-    public static synchronized boolean isTokenTimeout(Date tokenCreateTime) {
-        Calendar now = Calendar.getInstance();
-        // ÓÃ»§tokenÓĞĞ§ÆÚ¸ÄÎªÒ»ÖÜ
-        now.add(Calendar.DATE, -7);
-        return now.getTime().after(tokenCreateTime);
-    }
-
-    /**
-     * »ñÈ¡token¹ıÆÚÊ±¼ä´Á
-     *
-     * @param createDatetime
-     * @return
-     */
-    public static long getTokenTimelimit(Date createDatetime) {
-        Calendar createDate = Calendar.getInstance();
-        createDate.setTime(createDatetime);
-        createDate.add(Calendar.DATE, +7);
-        return createDate.getTimeInMillis() / 1000;
-    }
-
-    /**
-     * »ñÈ¡tokenÊ£Óà¹ıÆÚÊ±¼ä(µ¥Î»ÎªÃë)
-     *
-     * @param tokenCreateTime
-     * @return
-     */
-    public static long getTokenRemainTime(Date tokenCreateTime) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(tokenCreateTime);
-        calendar.add(Calendar.DAY_OF_MONTH, 7);
-        int secondsBeforeTokenTimeout = (int) ((calendar.getTimeInMillis() - System.currentTimeMillis()) / 1000) - 1;
-        return secondsBeforeTokenTimeout;
-    }
-
-    /**
-     * Ğ£Ñé1·ÖÖÓÄÚÊÇ·ñÖ´ĞĞ»ò³¬Ê±¶©µ¥É¨ÃèÇåÀí¹¤×÷
-     *
-     * @param latestExecutionTime ÉÏ´ÎÉ¨ÃèÊ±¼ä
-     * @return
-     */
-    public static boolean isExecuted(String latestExecutionTime, int period) {
-        if (TextUtils.isBlank(latestExecutionTime)) {
-            return true;
-        } else {
-            Date latestDate = Tool.parseDatetime(latestExecutionTime);
-            Calendar now = Calendar.getInstance();
-            now.add(Calendar.MINUTE, period);
-            return now.getTime().after(latestDate);
-        }
-    }
-
-    /**
-     * µİ¹éÉ¾³ıÄ¿Â¼ÏÂµÄËùÓĞÎÄ¼ş¼°×ÓÄ¿Â¼ÏÂËùÓĞÎÄ¼ş
-     *
-     * @param dir ½«ÒªÉ¾³ıµÄÎÄ¼şÄ¿Â¼
-     * @return boolean Returns "true" if all deletions were successful.
-     * If a deletion fails, the method stops attempting to
-     * delete and returns "false".
-     */
-    public static boolean deleteDir(File dir) {
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            //µİ¹éÉ¾³ıÄ¿Â¼ÖĞµÄ×ÓÄ¿Â¼ÏÂ
-            for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
-                if (!success) {
-                    return false;
-                }
-            }
-        }
-        // Ä¿Â¼´ËÊ±Îª¿Õ£¬¿ÉÒÔÉ¾³ı
-        return dir.delete();
-    }
-
-    /**
-     * ´ÓÍ¨Ñ¶Êı¾İÖĞ»ñÈ¡Éè±¸Ê±¼ä
-     *
-     * @param timeText
-     * @return
-     */
-    public static Calendar getDeviceCalendar(String timeText) {
-        Calendar deviceCalendar = Calendar.getInstance();
-        deviceCalendar.set(Calendar.YEAR, timeText.charAt(0) + 2000);
-        deviceCalendar.set(Calendar.MONTH, timeText.charAt(1) - 1);
-        deviceCalendar.set(Calendar.DAY_OF_MONTH, timeText.charAt(2));
-        deviceCalendar.set(Calendar.HOUR_OF_DAY, timeText.charAt(3));
-        deviceCalendar.set(Calendar.MINUTE, timeText.charAt(4));
-        deviceCalendar.set(Calendar.SECOND, timeText.charAt(5));
-        deviceCalendar.set(Calendar.MILLISECOND, 0);
-        return deviceCalendar;
-    }
-
-    /**
-     * MD5¼ÓÃÜ
-     *
-     * @param password
-     * @return
-     */
-    public static String md5(String password) {
-        if (isEmpty(password)) {
-            return "";
-        }
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(password.getBytes());
-            byte b[] = md.digest();
-
-            int i;
-
-            StringBuffer buf = new StringBuffer("");
-            for (int offset = 0; offset < b.length; offset++) {
-                i = b[offset];
-                if (i < 0)
-                    i += 256;
-                if (i < 16)
-                    buf.append("0");
-                buf.append(Integer.toHexString(i));
-            }
-            return buf.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    /**
-     * Éú³ÉÖ¸¶¨³¤¶ÈµÄËæ»ú×Ö·û´®£¨°üº¬´óĞ¡Ğ´×ÖÄ¸¡¢Êı×Ö£©
-     *
-     * @param length ±íÊ¾Éú³É×Ö·û´®µÄ³¤¶È
-     * @return ·µ»Ø×Ö·û´®ÀàĞÍ½á¹û
-     */
-    public static String getRandomString(int length) {
-        String base = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            int number = random.nextInt(base.length());
-            sb.append(base.charAt(number));
-        }
-        return sb.toString();
-    }
-
-    /**
-     * Éú³ÉÖ¸¶¨³¤¶ÈµÄËæ»úÊı×Ö×Ö·û´®
-     *
-     * @param length ±íÊ¾Éú³É×Ö·û´®µÄ³¤¶È
-     * @return ·µ»Ø×Ö·û´®ÀàĞÍ½á¹û
-     */
-    public static String getRandomInt(int length) {
-        String base = "1234567890";
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            int number = random.nextInt(base.length());
-            sb.append(base.charAt(number));
-        }
-        return sb.toString();
-    }
-
-    public static String getStringFromMap(Map<String, Object> map, String key, String defaultValue) {
-        if (key == "" || key == null) {
-            return defaultValue;
-        }
-        String result = (String) map.get(key);
-        if (result == null) {
-            return defaultValue;
-        } else {
-            return result;
-        }
-    }
-
-    public static int getIntFromMap(Map<String, Object> map, String key) {
-        if (key == "" || key == null) {
-            return 0;
-        }
-        if (map.get(key) == null) {
-            return 0;
-        }
-        return Integer.parseInt((String) map.get(key));
-    }
-
-    public static InputStream getStringStream(String sInputString) {
-        ByteArrayInputStream tInputStringStream = null;
-        if (sInputString != null && !sInputString.trim().equals("")) {
-            tInputStringStream = new ByteArrayInputStream(sInputString.getBytes());
-        }
-        return tInputStringStream;
-    }
-
-    public synchronized static String generateTradeNo() {
-        String time = "CD" + timeMillis.format(new Date());
-        time += getRandomInt(3);
-        return time;
-    }
-
-    public static String generateRefundNo(String tradeNo) {
-        return tradeNo + "-" + getRandomInt(4);
-    }
-
-    /**
-     * »ñÈ¡Ò»¸ö0µ½max-1Ö®¼äµÄËæ»úÕûÊı
-     *
-     * @param max
-     * @return
-     */
-    public static int nextInt(int max) {
-        return random.nextInt(max);
-    }
-
-    @SuppressWarnings("rawtypes")
-    public static Object getObjectFromXML(String xml, Class clazz) {
-        //½«´ÓAPI·µ»ØµÄXMLÊı¾İÓ³Éäµ½Java¶ÔÏó
-        XStream xStreamForResponseData = new XStream();
-        xStreamForResponseData.alias("xml", clazz);
-        xStreamForResponseData.ignoreUnknownElements();//ÔİÊ±ºöÂÔµôÒ»Ğ©ĞÂÔöµÄ×Ö¶Î
-        return xStreamForResponseData.fromXML(xml);
-    }
-
-    /**
-     * ¼ì²âĞòÁĞºÅÊÇ·ñºÏ·¨£¨²»´æÔÚµÍÓÚ0x30µÄÊı¾İÎªºÏ·¨Êı¾İ£©
-     *
-     * @param serialNum
-     * @return
-     */
-    public static boolean checkSerialNumValid(String serialNum) {
-        for (int i = 0; i < serialNum.length(); i++) {
-            if (serialNum.charAt(i) < 0x30) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * ¼ì²éappÉÏ´«µÄ×ø±ê²ÎÊıÊÇ·ñĞèÒª¼ÆËã¾àÀë
-     * Îª¿Õ²»¼ÆËã¡¢ÎªÁã²»¼ÆËã
-     *
-     * @param lonLat
-     * @return
-     */
-    public static boolean checkLonLat(String lonLat) {
-        if (!TextUtils.isBlank(lonLat) && !",".equals(lonLat)) {
-            String gps[] = lonLat.split(",");
-            Double lon = Double.parseDouble(gps[0]);
-            Double lat = Double.parseDouble(gps[1]);
-
-            if (lon > 0 || lat > 0) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static String convertCardNum(String cardNum) {
-        String fixCardNum = "";
-        for (int i = 0; i < 16 - cardNum.length(); i++) {
-            fixCardNum += "0";
-        }
-
-        fixCardNum += cardNum;
-        String data = "";
-        for (int i = 0; i < 8; i++) {
-            data += getStringFromHex(Integer.parseInt(fixCardNum.substring(i * 2, i * 2 + 2), 16));
-        }
-
-        return data;
-    }
-
-    /**
-     * ¸ßÎ»²¹Áã
-     *
-     * @param number
-     * @param length
-     * @return
-     */
-    public static String fillZeros(int number, int length) {
-        String text = String.valueOf(number);
-        while (text.length() < length) {
-            text = "0" + text;
-        }
-        return text;
-    }
-
-    /**
-     * get version numbers
-     *
-     * @param version
-     * @return
-     */
-    public static int getVersionNumber(final String version) {
-        if (isEmpty(version)) {
-            return 0;
-        }
-
-        String versionText = version;
-
-        versionText = versionText.replace(".", "");
-        try {
-            return Integer.parseInt(versionText);
-        } catch (NumberFormatException e) {
-        }
-        return 0;
-    }
-
-    /**
-     * ¸ñÊ½»¯ÃëÊıÎª¡°Ìì-Ê±-·Ö¡±µÄ¸ñÊ½
-     *
-     * @param totalSeconds
-     * @return
-     */
-    public static String formatSeconds(long totalSeconds) {
-        String result = "";
-        if (0L == totalSeconds) {
-            return "0·ÖÖÓ";
-        }
-
-        long hours = totalSeconds / 3600;
-        if (0L != hours) {
-            result += hours + "Ğ¡Ê±";
-        }
-
-        long minutes = (totalSeconds - hours * 3600) / 60;
-        if (0L != minutes) {
-            result += minutes + "·ÖÖÓ";
-        }
-        if (result == "") {
-            return "0·ÖÖÓ";
-        }
-
-        return result;
-    }
-
-    /**
-     * ÅĞ¶ÏÊÇ·ñÊÇÕıÕûÊı
-     *
-     * @param text
-     * @return
-     */
-    public static boolean isPositiveNumber(String text) {
-        String reg = "[1-9]\\d*";
-        return text.matches(reg);
-    }
-
-    public static Calendar getHCDeviceCalendar(String timeText) {
-        Calendar deviceCalendar = Calendar.getInstance();
-        deviceCalendar.set(1, Integer.parseInt(new StringBuilder().append(Integer.toHexString(timeText.charAt(0))).append(Integer.toHexString(timeText.charAt(1))).toString()));
-        deviceCalendar.set(2, Integer.parseInt(Integer.toHexString(timeText.charAt(2))) - 1);
-        deviceCalendar.set(5, Integer.parseInt(Integer.toHexString(timeText.charAt(3))));
-        deviceCalendar.set(11, Integer.parseInt(Integer.toHexString(timeText.charAt(4))));
-        deviceCalendar.set(12, Integer.parseInt(Integer.toHexString(timeText.charAt(5))));
-        deviceCalendar.set(13, Integer.parseInt(Integer.toHexString(timeText.charAt(6))));
-        deviceCalendar.set(14, 0);
-        return deviceCalendar;
-    }
-
-    public static String getCurrentTimeStr10() {
-        return getCurrentTimeStr10(new Date());
-    }
-
-    public static String getCurrentTimeStr10(Date date) {
-        String dateStr = formatNoSymbolDateTime(date);
-        StringBuffer dateBuffer = new StringBuffer();
-        char[] dateChars = dateStr.toCharArray();
-        for (int i = 0; i < dateChars.length; i += 2) {
-            dateBuffer.append(getStringFromHex(Integer.valueOf(new StringBuilder().append(String.valueOf(dateChars[i])).append(String.valueOf(dateChars[(i + 1)])).toString(), 16).intValue()));
-        }
-        return dateBuffer.toString();
-    }
-
-    public static String getDateStrFromISO8601(String isoDate) {
-        return Tool.formatDateTime(getDateFromISO8601(isoDate));
-    }
-
-    public static Date getDateFromISO8601(String isoDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-        try {
-            return sdf.parse(isoDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static String getISO8601Timestamp() {
+	private static final SimpleDateFormat monthDateFormat = new SimpleDateFormat("yyyy-MM");
+
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+	private static final SimpleDateFormat noSymbolDateTimeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+
+	private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+
+	private static final SimpleDateFormat minuteFormat = new SimpleDateFormat("mmåˆ†");
+
+	private static final SimpleDateFormat timeMillis = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+
+	private static final Random random = new Random();
+
+//	private static final String key = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+	public static boolean isWjDevice(String chargerSerialNum) {
+		return chargerSerialNum != null && chargerSerialNum.startsWith("W") && chargerSerialNum.length() == 14;
+	}
+
+	/**
+	 * æ ¼å¼åŒ–å½“å¤©æ—¥æœŸ
+	 *
+	 * @return
+	 */
+	public synchronized static String formatTodayDate() {
+		return dateFormat.format(new Date()).replaceAll("-", "");
+	}
+
+	/**
+	 * åˆ›å»ºä¸€ä¸ªuuid
+	 *
+	 * @return
+	 */
+	public static String createUuid() {
+		return UUID.randomUUID().toString().replace("-", "");
+	}
+
+	/**
+	 * å¾—åˆ°èµ„æºæ–‡ä»¶çš„æ ¹è·¯å¾„
+	 * 
+	 * @return
+	 */
+	public static String getResourceRoot() {
+		return System.getProperty("user.home") + "/";
+	}
+
+	/**
+	 * æ ¹æ®å›¾ç‰‡å®Œæ•´URLæˆ–åç§°è·å–å›¾ç‰‡æ‰©å±•å
+	 *
+	 * @param path
+	 * @return
+	 */
+	public static String getImageExtension(String path) {
+		int lastIndex = path.lastIndexOf(".");
+		if (lastIndex > 0 && lastIndex > path.lastIndexOf("/")) {
+			String extension = path.substring(lastIndex).toLowerCase();
+			if (".jpg".equals(extension) || ".jpeg".equals(extension) || ".png".equals(extension)
+					|| ".gif".equals(extension) || ".bmp".contains(extension)) {
+				return extension;
+			}
+		}
+		return ".jpg";
+	}
+
+	/**
+	 * è§£æyyyy-MM-ddæ ¼å¼æˆ–yyyy_MM_ddæ ¼å¼çš„æ—¥æœŸå­—ä¸²
+	 *
+	 * @param dateText
+	 * @return
+	 */
+	public synchronized static Date parseDate(String dateText) {
+		try {
+			return isEmpty(dateText) ? null : dateFormat.parse(dateText.replace("_", "-"));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * è§£æyyyy-MM-dd HH:mm:ssæ ¼å¼çš„æ—¥æœŸæ—¶é—´å­—ä¸²
+	 *
+	 * @param datetimeText
+	 * @return
+	 */
+	public synchronized static Date parseDatetime(String datetimeText) {
+		try {
+			return isEmpty(datetimeText) ? null : dateTimeFormat.parse(datetimeText);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * è§£ææ— ç¬¦å·çš„yyyyMMddHHmmssæ ¼å¼çš„æ—¥æœŸæ—¶é—´å­—ä¸²
+	 *
+	 * @param noSymbolDatetimeText
+	 * @return
+	 */
+	public synchronized static Date parseNoSymbolDatetime(String noSymbolDatetimeText) {
+		try {
+			return isEmpty(noSymbolDatetimeText) ? null : noSymbolDateTimeFormat.parse(noSymbolDatetimeText);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * å°†Dateæ—¥æœŸæ ¼å¼åŒ–æˆyyyy-MMæ ¼å¼
+	 *
+	 * @param date
+	 * @return
+	 */
+	public synchronized static String formatMonthDate(Date date) {
+		return monthDateFormat.format(date);
+	}
+
+	/**
+	 * å°†Dateæ—¥æœŸæ ¼å¼åŒ–æˆyyyy-MM-ddæ ¼å¼
+	 *
+	 * @param date
+	 * @return
+	 */
+	public synchronized static String formatDate(Date date) {
+		return dateFormat.format(date);
+	}
+
+	/**
+	 * å°†Dateæ—¥æœŸæ ¼å¼åŒ–æˆyyyy-MM-dd HH:mm:ssæ ¼å¼
+	 *
+	 * @param date
+	 * @return
+	 */
+	public synchronized static String formatDateTime(Date date) {
+		return dateTimeFormat.format(date);
+	}
+
+	/**
+	 * å°†Dateæ—¥æœŸæ ¼å¼åŒ–æˆyyyyMMddHHmmssæ ¼å¼
+	 *
+	 * @param date
+	 * @return
+	 */
+	public synchronized static String formatNoSymbolDateTime(Date date) {
+		return noSymbolDateTimeFormat.format(date);
+	}
+
+	public static String showDate(Date date) {
+		return date != null ? Tool.formatDate(date) : "";
+	}
+
+	public static String showDateTime(Date date) {
+		return date != null ? Tool.formatDateTime(date) : "";
+	}
+
+	/**
+	 * å°†Dateæ—¶é—´æ ¼å¼åŒ–æˆHH:mm:ssæ ¼å¼
+	 *
+	 * @param date
+	 * @return
+	 */
+	public synchronized static String formatTime(Date date) {
+		return timeFormat.format(date);
+	}
+
+	/**
+	 * å°†Dateæ—¶é—´æ ¼å¼åŒ–æˆmm:ssæ ¼å¼
+	 *
+	 * @param date
+	 * @return
+	 */
+	public synchronized static String formatMinute(Date date) {
+		return minuteFormat.format(date);
+	}
+
+	/**
+	 * æ£€æµ‹å­—ç¬¦ä¸²æ˜¯å¦ä¸ºç©º
+	 *
+	 * @param obj
+	 * @return
+	 */
+	public static boolean isEmpty(String obj) {
+		if (obj == null || "".equals(obj.trim())) {
+			return true;
+		}
+		return false;
+	}
+
+	public static float formatFloat(float data, int digits) {
+		return Float.valueOf(formatData(data, digits)).floatValue();
+	}
+
+	/**
+	 * æ ¼å¼åŒ–floatæ•°æ®,ä¿ç•™ä¸€ä½å°æ•°
+	 *
+	 * @param data
+	 * @return
+	 */
+	public static float formatFloat(float data) {
+		return formatFloat(data, 1);
+	}
+
+	public static String formatData(double data) {
+		return formatData(data, 1);
+	}
+
+	public static String formatData(double data, int digits) {
+		NumberFormat nf = NumberFormat.getInstance(Locale.CHINA);
+		nf.setGroupingUsed(false);
+		nf.setMaximumFractionDigits(digits);
+		return nf.format(data);
+	}
+
+	public static void sleep(long mills) {
+		try {
+			Thread.sleep(mills);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * å½“å‰çº¿ç¨‹ä¼‘çœ 
+	 *
+	 * @param seconds ç§’
+	 */
+	public static void delay(long seconds) {
+		try {
+			Thread.sleep(seconds * 1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * å°†Booleanå€¼è½¬æ¢æˆjså¯ç”¨åˆ¤æ–­
+	 *
+	 * @param result
+	 * @return
+	 */
+	public static String toJsBoolean(boolean result) {
+		return result ? "true" : "";
+	}
+
+	/**
+	 * è¿”å›æ— æƒé™å¤„ç†å¤±è´¥çš„Jsonè¿”å›å€¼
+	 *
+	 * @return
+	 */
+	public static String getJsonNoPermissionFalseReturn() {
+		return getJsonMsgReturn(false, "noPermission");
+	}
+
+	/**
+	 * è¿”å›easyuiçš„datagridç»„å»ºæ— æ•°æ®Jsonè¿”å›å€¼
+	 *
+	 * @return
+	 */
+	public static String getJsonNoDataGridDataReturn() {
+		return "{\"total\":0,\"rows\":[]}";
+	}
+
+	/**
+	 * è·å–ä¸€ä¸ªsuccessä¸ºtrueçš„JSONObjectå¯¹è±¡
+	 *
+	 * @return
+	 */
+	public static JSONObject getAppSuccessReturnJSONObject() {
+		JSONObject obj = new JSONObject();
+		obj.put("success", true);
+		return obj;
+	}
+
+	/**
+	 * è·å–ä¸€ä¸ªsuccessä¸ºtrueçš„JSONObjectå¯¹è±¡
+	 *
+	 * @return
+	 */
+	public static JSONObject getAppFailureReturnJSONObject() {
+		JSONObject obj = new JSONObject();
+		obj.put("success", false);
+		return obj;
+	}
+
+	/**
+	 * è·å–ä¸€ä¸ªJsonå›å¤ï¼ˆå¸¦msgï¼‰
+	 *
+	 * @param success
+	 * @param msg
+	 * @return
+	 */
+	public static String getJsonMsgReturn(boolean success, String msg) {
+		JSONObject obj = new JSONObject();
+		obj.put("success", success);
+		obj.put("msg", msg);
+		return obj.toString();
+	}
+
+	/**
+	 * è¿‡æ»¤æ–‡å­—ä¸­çš„å¤§äºå·è·Ÿå°äºå·ã€åŒå¼•å·
+	 *
+	 * @param showText
+	 * @return
+	 */
+	public static String filterShowText(String showText) {
+		if (Tool.isEmpty(showText)) {
+			return showText;
+		}
+		return showText.replace("<", "").replace(">", "").replace("\"", "").replace("\'", "");
+	}
+
+	/**
+	 * å°†intæ•°å­—è½¬æ¢æˆå¯¹åº”ASCIIå­—ç¬¦
+	 *
+	 * @param data
+	 * @return
+	 */
+	public static String getStringFromHex(long data) {
+		return new Character((char) data).toString();
+	}
+
+	/**
+	 * è½¬æ¢å­—ç¬¦ä¸²ä¸ºå®¹æ˜“é˜…è¯»çš„16è¿›åˆ¶æ•°æ®
+	 *
+	 * @param command
+	 * @return
+	 */
+	public static String showData(String command) {
+		if (command == null) {
+			return "";
+		}
+		String str = "";
+		for (char c : command.toCharArray()) {
+			String hexString = Integer.toHexString(c);
+			if (hexString.length() == 1) {
+				hexString = "0" + hexString;
+			}
+			str += hexString + " ";
+		}
+		return str.toUpperCase().trim();
+	}
+
+	/**
+	 * å»æ‰å¡å·å‰é¢çš„0
+	 *
+	 * @param text
+	 * @return
+	 */
+	public static String trimZeroFromBegin(String text) {
+		while (text.length() > 1 && text.charAt(0) == 0x30) {
+			text = text.substring(1);
+		}
+		return text;
+	}
+
+	/**
+	 * è·å–é«˜å››ä½
+	 *
+	 * @param data
+	 * @return 16è¿›åˆ¶å­—ç¬¦ä¸²
+	 */
+	public static String getHeight4(int data) {
+		int height = ((data & 0xf0) >> 4);
+		return Integer.toHexString(height);
+	}
+
+	/**
+	 * è·å–ä½å››ä½
+	 *
+	 * @param data
+	 * @return 16è¿›åˆ¶å­—ç¬¦ä¸²
+	 */
+	public static String getLow4(int data) {
+		int low = (data & 0x0f);
+		return Integer.toHexString(low);
+	}
+
+	/**
+	 * åˆ›å»º6ä½éšæœºæ•°å­—éªŒè¯ç 
+	 *
+	 * @return
+	 */
+	public static String createRendomVerifyCode() {
+		String verifyCode = "";
+		for (int i = 0; i < 6; i++) {
+			verifyCode += random.nextInt(10);
+		}
+		return verifyCode;
+	}
+
+	/**
+	 * é…ç½®Tokenåœ¨6å¤©ä¹‹åè¿‡æœŸï¼ˆç”¨äºæœ¬åœ°å‚¨å­˜tokençš„å®¢æˆ·ç«¯ï¼Œé¿å…ä½¿ç”¨è¿‡ç¨‹ä¸­Tokenè¶…æ—¶ï¼‰
+	 *
+	 * @param tokenCreateTime
+	 * @return
+	 */
+	public static synchronized boolean isTokenForSaveTimeout(Date tokenCreateTime) {
+		Calendar now = Calendar.getInstance();
+		// ç”¨æˆ·tokenæœ‰æ•ˆæœŸæ”¹ä¸ºä¸€å‘¨
+		now.add(Calendar.DATE, -6);
+		return now.getTime().after(tokenCreateTime);
+	}
+
+	/**
+	 * é…ç½®Tokenåœ¨7å¤©ä¹‹åè¿‡æœŸ
+	 *
+	 * @param tokenCreateTime
+	 * @return
+	 */
+	public static synchronized boolean isTokenTimeout(Date tokenCreateTime) {
+		Calendar now = Calendar.getInstance();
+		// ç”¨æˆ·tokenæœ‰æ•ˆæœŸæ”¹ä¸ºä¸€å‘¨
+		now.add(Calendar.DATE, -7);
+		return now.getTime().after(tokenCreateTime);
+	}
+
+	/**
+	 * è·å–tokenè¿‡æœŸæ—¶é—´æˆ³
+	 *
+	 * @param createDatetime
+	 * @return
+	 */
+	public static long getTokenTimelimit(Date createDatetime) {
+		Calendar createDate = Calendar.getInstance();
+		createDate.setTime(createDatetime);
+		createDate.add(Calendar.DATE, +7);
+		return createDate.getTimeInMillis() / 1000;
+	}
+
+	/**
+	 * è·å–tokenå‰©ä½™è¿‡æœŸæ—¶é—´(å•ä½ä¸ºç§’)
+	 *
+	 * @param tokenCreateTime
+	 * @return
+	 */
+	public static long getTokenRemainTime(Date tokenCreateTime) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(tokenCreateTime);
+		calendar.add(Calendar.DAY_OF_MONTH, 7);
+		int secondsBeforeTokenTimeout = (int) ((calendar.getTimeInMillis() - System.currentTimeMillis()) / 1000) - 1;
+		return secondsBeforeTokenTimeout;
+	}
+
+	/**
+	 * æ ¡éªŒ1åˆ†é’Ÿå†…æ˜¯å¦æ‰§è¡Œæˆ–è¶…æ—¶è®¢å•æ‰«ææ¸…ç†å·¥ä½œ
+	 *
+	 * @param latestExecutionTime ä¸Šæ¬¡æ‰«ææ—¶é—´
+	 * @return
+	 */
+	public static boolean isExecuted(String latestExecutionTime, int period) {
+		if (TextUtils.isBlank(latestExecutionTime)) {
+			return true;
+		} else {
+			Date latestDate = Tool.parseDatetime(latestExecutionTime);
+			Calendar now = Calendar.getInstance();
+			now.add(Calendar.MINUTE, period);
+			return now.getTime().after(latestDate);
+		}
+	}
+
+	/**
+	 * é€’å½’åˆ é™¤ç›®å½•ä¸‹çš„æ‰€æœ‰æ–‡ä»¶åŠå­ç›®å½•ä¸‹æ‰€æœ‰æ–‡ä»¶
+	 *
+	 * @param dir å°†è¦åˆ é™¤çš„æ–‡ä»¶ç›®å½•
+	 * @return boolean Returns "true" if all deletions were successful. If a
+	 *         deletion fails, the method stops attempting to delete and returns
+	 *         "false".
+	 */
+	public static boolean deleteDir(File dir) {
+		if (dir.isDirectory()) {
+			String[] children = dir.list();
+			// é€’å½’åˆ é™¤ç›®å½•ä¸­çš„å­ç›®å½•ä¸‹
+			for (int i = 0; i < children.length; i++) {
+				boolean success = deleteDir(new File(dir, children[i]));
+				if (!success) {
+					return false;
+				}
+			}
+		}
+		// ç›®å½•æ­¤æ—¶ä¸ºç©ºï¼Œå¯ä»¥åˆ é™¤
+		return dir.delete();
+	}
+
+	/**
+	 * ä»é€šè®¯æ•°æ®ä¸­è·å–è®¾å¤‡æ—¶é—´
+	 *
+	 * @param timeText
+	 * @return
+	 */
+	public static Calendar getDeviceCalendar(String timeText) {
+		Calendar deviceCalendar = Calendar.getInstance();
+		deviceCalendar.set(Calendar.YEAR, timeText.charAt(0) + 2000);
+		deviceCalendar.set(Calendar.MONTH, timeText.charAt(1) - 1);
+		deviceCalendar.set(Calendar.DAY_OF_MONTH, timeText.charAt(2));
+		deviceCalendar.set(Calendar.HOUR_OF_DAY, timeText.charAt(3));
+		deviceCalendar.set(Calendar.MINUTE, timeText.charAt(4));
+		deviceCalendar.set(Calendar.SECOND, timeText.charAt(5));
+		deviceCalendar.set(Calendar.MILLISECOND, 0);
+		return deviceCalendar;
+	}
+
+	/**
+	 * MD5åŠ å¯†
+	 *
+	 * @param password
+	 * @return
+	 */
+	public static String md5(String password) {
+		if (isEmpty(password)) {
+			return "";
+		}
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(password.getBytes());
+			byte b[] = md.digest();
+
+			int i;
+
+			StringBuffer buf = new StringBuffer("");
+			for (int offset = 0; offset < b.length; offset++) {
+				i = b[offset];
+				if (i < 0)
+					i += 256;
+				if (i < 16)
+					buf.append("0");
+				buf.append(Integer.toHexString(i));
+			}
+			return buf.toString();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+	/**
+	 * ç”ŸæˆæŒ‡å®šé•¿åº¦çš„éšæœºå­—ç¬¦ä¸²ï¼ˆåŒ…å«å¤§å°å†™å­—æ¯ã€æ•°å­—ï¼‰
+	 *
+	 * @param length è¡¨ç¤ºç”Ÿæˆå­—ç¬¦ä¸²çš„é•¿åº¦
+	 * @return è¿”å›å­—ç¬¦ä¸²ç±»å‹ç»“æœ
+	 */
+	public static String getRandomString(int length) {
+		String base = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < length; i++) {
+			int number = random.nextInt(base.length());
+			sb.append(base.charAt(number));
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * ç”ŸæˆæŒ‡å®šé•¿åº¦çš„éšæœºæ•°å­—å­—ç¬¦ä¸²
+	 *
+	 * @param length è¡¨ç¤ºç”Ÿæˆå­—ç¬¦ä¸²çš„é•¿åº¦
+	 * @return è¿”å›å­—ç¬¦ä¸²ç±»å‹ç»“æœ
+	 */
+	public static String getRandomInt(int length) {
+		String base = "1234567890";
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < length; i++) {
+			int number = random.nextInt(base.length());
+			sb.append(base.charAt(number));
+		}
+		return sb.toString();
+	}
+
+	public static String getStringFromMap(Map<String, Object> map, String key, String defaultValue) {
+		if (key == "" || key == null) {
+			return defaultValue;
+		}
+		String result = (String) map.get(key);
+		if (result == null) {
+			return defaultValue;
+		} else {
+			return result;
+		}
+	}
+
+	public static int getIntFromMap(Map<String, Object> map, String key) {
+		if (key == "" || key == null) {
+			return 0;
+		}
+		if (map.get(key) == null) {
+			return 0;
+		}
+		return Integer.parseInt((String) map.get(key));
+	}
+
+	public static InputStream getStringStream(String sInputString) {
+		ByteArrayInputStream tInputStringStream = null;
+		if (sInputString != null && !sInputString.trim().equals("")) {
+			tInputStringStream = new ByteArrayInputStream(sInputString.getBytes());
+		}
+		return tInputStringStream;
+	}
+
+	public synchronized static String generateTradeNo() {
+		String time = "CD" + timeMillis.format(new Date());
+		time += getRandomInt(3);
+		return time;
+	}
+
+	public static String generateRefundNo(String tradeNo) {
+		return tradeNo + "-" + getRandomInt(4);
+	}
+
+	/**
+	 * è·å–ä¸€ä¸ª0åˆ°max-1ä¹‹é—´çš„éšæœºæ•´æ•°
+	 *
+	 * @param max
+	 * @return
+	 */
+	public static int nextInt(int max) {
+		return random.nextInt(max);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static Object getObjectFromXML(String xml, Class clazz) {
+		// å°†ä»APIè¿”å›çš„XMLæ•°æ®æ˜ å°„åˆ°Javaå¯¹è±¡
+		XStream xStreamForResponseData = new XStream();
+		xStreamForResponseData.alias("xml", clazz);
+		xStreamForResponseData.ignoreUnknownElements();// æš‚æ—¶å¿½ç•¥æ‰ä¸€äº›æ–°å¢çš„å­—æ®µ
+		return xStreamForResponseData.fromXML(xml);
+	}
+
+	/**
+	 * æ£€æµ‹åºåˆ—å·æ˜¯å¦åˆæ³•ï¼ˆä¸å­˜åœ¨ä½äº0x30çš„æ•°æ®ä¸ºåˆæ³•æ•°æ®ï¼‰
+	 *
+	 * @param serialNum
+	 * @return
+	 */
+	public static boolean checkSerialNumValid(String serialNum) {
+		for (int i = 0; i < serialNum.length(); i++) {
+			if (serialNum.charAt(i) < 0x30) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * æ£€æŸ¥appä¸Šä¼ çš„åæ ‡å‚æ•°æ˜¯å¦éœ€è¦è®¡ç®—è·ç¦» ä¸ºç©ºä¸è®¡ç®—ã€ä¸ºé›¶ä¸è®¡ç®—
+	 *
+	 * @param lonLat
+	 * @return
+	 */
+	public static boolean checkLonLat(String lonLat) {
+		if (!TextUtils.isBlank(lonLat) && !",".equals(lonLat)) {
+			String gps[] = lonLat.split(",");
+			Double lon = Double.parseDouble(gps[0]);
+			Double lat = Double.parseDouble(gps[1]);
+
+			if (lon > 0 || lat > 0) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static String convertCardNum(String cardNum) {
+		String fixCardNum = "";
+		for (int i = 0; i < 16 - cardNum.length(); i++) {
+			fixCardNum += "0";
+		}
+
+		fixCardNum += cardNum;
+		String data = "";
+		for (int i = 0; i < 8; i++) {
+			data += getStringFromHex(Integer.parseInt(fixCardNum.substring(i * 2, i * 2 + 2), 16));
+		}
+
+		return data;
+	}
+
+	/**
+	 * é«˜ä½è¡¥é›¶
+	 *
+	 * @param number
+	 * @param length
+	 * @return
+	 */
+	public static String fillZeros(int number, int length) {
+		String text = String.valueOf(number);
+		while (text.length() < length) {
+			text = "0" + text;
+		}
+		return text;
+	}
+
+	/**
+	 * get version numbers
+	 *
+	 * @param version
+	 * @return
+	 */
+	public static int getVersionNumber(final String version) {
+		if (isEmpty(version)) {
+			return 0;
+		}
+
+		String versionText = version;
+
+		versionText = versionText.replace(".", "");
+		try {
+			return Integer.parseInt(versionText);
+		} catch (NumberFormatException e) {
+		}
+		return 0;
+	}
+
+	/**
+	 * æ ¼å¼åŒ–ç§’æ•°ä¸ºâ€œå¤©-æ—¶-åˆ†â€çš„æ ¼å¼
+	 *
+	 * @param totalSeconds
+	 * @return
+	 */
+	public static String formatSeconds(long totalSeconds) {
+		String result = "";
+		if (0L == totalSeconds) {
+			return "0åˆ†é’Ÿ";
+		}
+
+		long hours = totalSeconds / 3600;
+		if (0L != hours) {
+			result += hours + "å°æ—¶";
+		}
+
+		long minutes = (totalSeconds - hours * 3600) / 60;
+		if (0L != minutes) {
+			result += minutes + "åˆ†é’Ÿ";
+		}
+		if (result == "") {
+			return "0åˆ†é’Ÿ";
+		}
+
+		return result;
+	}
+
+	/**
+	 * åˆ¤æ–­æ˜¯å¦æ˜¯æ­£æ•´æ•°
+	 *
+	 * @param text
+	 * @return
+	 */
+	public static boolean isPositiveNumber(String text) {
+		String reg = "[1-9]\\d*";
+		return text.matches(reg);
+	}
+
+	public static Calendar getHCDeviceCalendar(String timeText) {
+		Calendar deviceCalendar = Calendar.getInstance();
+		deviceCalendar.set(1, Integer.parseInt(new StringBuilder().append(Integer.toHexString(timeText.charAt(0)))
+				.append(Integer.toHexString(timeText.charAt(1))).toString()));
+		deviceCalendar.set(2, Integer.parseInt(Integer.toHexString(timeText.charAt(2))) - 1);
+		deviceCalendar.set(5, Integer.parseInt(Integer.toHexString(timeText.charAt(3))));
+		deviceCalendar.set(11, Integer.parseInt(Integer.toHexString(timeText.charAt(4))));
+		deviceCalendar.set(12, Integer.parseInt(Integer.toHexString(timeText.charAt(5))));
+		deviceCalendar.set(13, Integer.parseInt(Integer.toHexString(timeText.charAt(6))));
+		deviceCalendar.set(14, 0);
+		return deviceCalendar;
+	}
+
+	public static String getCurrentTimeStr10() {
+		return getCurrentTimeStr10(new Date());
+	}
+
+	public static String getCurrentTimeStr10(Date date) {
+		String dateStr = formatNoSymbolDateTime(date);
+		StringBuffer dateBuffer = new StringBuffer();
+		char[] dateChars = dateStr.toCharArray();
+		for (int i = 0; i < dateChars.length; i += 2) {
+			dateBuffer.append(getStringFromHex(Integer.valueOf(new StringBuilder().append(String.valueOf(dateChars[i]))
+					.append(String.valueOf(dateChars[(i + 1)])).toString(), 16).intValue()));
+		}
+		return dateBuffer.toString();
+	}
+
+	public static String getDateStrFromISO8601(String isoDate) {
+		return Tool.formatDateTime(getDateFromISO8601(isoDate));
+	}
+
+	public static Date getDateFromISO8601(String isoDate) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+		try {
+			return sdf.parse(isoDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static String getISO8601Timestamp() {
 //        Date date = Tool.parseDatetime("2018-10-10 21:12:06");
-        return getISO8601Timestamp(new Date());
-    }
+		return getISO8601Timestamp(new Date());
+	}
 
-    public static String getISO8601Timestamp(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-        return sdf.format(date);
-    }
+	public static String getISO8601Timestamp(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+		return sdf.format(date);
+	}
 
-    /**
-     * ½«×Ö½Ú×ª»»ÎªÊ®Áù½øÖÆ×Ö·û´®
-     * @param mByte
-     * @return
-     */
-    public static String byteToHexStr(byte mByte) {
-        char[] Digit = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-        char[] tempArr = new char[2];
-        tempArr[0] = Digit[(mByte >>> 4) & 0X0F];
-        tempArr[1] = Digit[mByte & 0X0F];
-        String s = new String(tempArr);
-        return s;
-    }
+	/**
+	 * å°†å­—èŠ‚è½¬æ¢ä¸ºåå…­è¿›åˆ¶å­—ç¬¦ä¸²
+	 * 
+	 * @param mByte
+	 * @return
+	 */
+	public static String byteToHexStr(byte mByte) {
+		char[] Digit = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+		char[] tempArr = new char[2];
+		tempArr[0] = Digit[(mByte >>> 4) & 0X0F];
+		tempArr[1] = Digit[mByte & 0X0F];
+		String s = new String(tempArr);
+		return s;
+	}
 
-    /**
-     * ½«×Ö½ÚÊı×é×ª»»ÎªÊ®Áù½øÖÆ×Ö·û´®
-     * @param byteArray
-     * @return
-     */
-    public static String byteToStr(byte[] byteArray) {
+	/**
+	 * å°†å­—èŠ‚æ•°ç»„è½¬æ¢ä¸ºåå…­è¿›åˆ¶å­—ç¬¦ä¸²
+	 * 
+	 * @param byteArray
+	 * @return
+	 */
+	public static String byteToStr(byte[] byteArray) {
 
-        String strDigest = "";
-        for (int i = 0; i < byteArray.length; i++) {
-            strDigest += byteToHexStr(byteArray[i]);
-        }
-        return strDigest;
+		String strDigest = "";
+		for (int i = 0; i < byteArray.length; i++) {
+			strDigest += byteToHexStr(byteArray[i]);
+		}
+		return strDigest;
 
-    }
+	}
 
-    public static boolean isInteger(String str) {
-        if (str == null || str == "") {
-            return false;
-        }
-        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
-        return pattern.matcher(str).matches();
-    }
+	public static boolean isInteger(String str) {
+		if (str == null || str == "") {
+			return false;
+		}
+		Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+		return pattern.matcher(str).matches();
+	}
 
-    /**
-     * ¸ù¾İ³äµçÊ±³¤¼ÆËãµçµ¥³µ·ÑÓÃ
-     *
-     * @param chargeSeconds
-     * @return
-     */
-    public static int calcElecFeeByTime(int chargeSeconds, int formula) {
-        int elecFee = 0;
-        if (chargeSeconds <= 180) { // 3·ÖÖÓÄÚ²»ÊÕ·Ñ
-            elecFee = 0;
-        } else {
-            int hours = chargeSeconds / 3600;
-            if (0L != hours) {
-                elecFee = hours * formula;
-            }
-            int minutes = (chargeSeconds - hours * 3600) / 60;
-            if (0L != minutes) {
-                elecFee += formula;
-            }
-        }
-        return elecFee;
-    }
+	/**
+	 * æ ¹æ®å……ç”µæ—¶é•¿è®¡ç®—ç”µå•è½¦è´¹ç”¨
+	 *
+	 * @param chargeSeconds
+	 * @return
+	 */
+	public static int calcElecFeeByTime(int chargeSeconds, int formula) {
+		int elecFee = 0;
+		if (chargeSeconds <= 180) { // 3åˆ†é’Ÿå†…ä¸æ”¶è´¹
+			elecFee = 0;
+		} else {
+			int hours = chargeSeconds / 3600;
+			if (0L != hours) {
+				elecFee = hours * formula;
+			}
+			int minutes = (chargeSeconds - hours * 3600) / 60;
+			if (0L != minutes) {
+				elecFee += formula;
+			}
+		}
+		return elecFee;
+	}
 
-    public static List<Long> changeListTypeToLong(List<String> stringList) {
-        List<Long> resultList = new ArrayList<Long>();
-        for (String str : stringList) {
-            resultList.add(Long.parseLong(str));
-        }
+	public static List<Long> changeListTypeToLong(List<String> stringList) {
+		List<Long> resultList = new ArrayList<Long>();
+		for (String str : stringList) {
+			resultList.add(Long.parseLong(str));
+		}
 
-        return resultList;
-    }
+		return resultList;
+	}
 
-    /**
-     * Òş²ØÊÖ»úºÅÂëÖĞ¼äËÄÎ»
-     *
-     * @param mobile
-     * @return
-     */
-    public static String hiddenMobile(String mobile) {
-        if (mobile != null && !mobile.equals("")) {
-            return mobile.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
-        }
-        return mobile;
-    }
+	/**
+	 * éšè—æ‰‹æœºå·ç ä¸­é—´å››ä½
+	 *
+	 * @param mobile
+	 * @return
+	 */
+	public static String hiddenMobile(String mobile) {
+		if (mobile != null && !mobile.equals("")) {
+			return mobile.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+		}
+		return mobile;
+	}
 
-    /**
-     * ¼ì²âÊÇ·ñ·Ç¿Õ
-     *
-     * eg. null¡¢""¡¢"  "¡¢"null"¡¢"NULL"¡¢"   NULL  "¡¢"NU  LL" ·µ»Øfalse
-     * @param content
-     * @return
-     */
-    public static boolean checkNotNullOrNullStr(String content) {
-        final String nullValue = "null";
+	/**
+	 * æ£€æµ‹æ˜¯å¦éç©º
+	 *
+	 * eg. nullã€""ã€" "ã€"null"ã€"NULL"ã€" NULL "ã€"NU LL" è¿”å›false
+	 * 
+	 * @param content
+	 * @return
+	 */
+	public static boolean checkNotNullOrNullStr(String content) {
+		final String nullValue = "null";
 
-        if (TextUtils.isBlank(content)) {
-            return false;
-        }
+		if (TextUtils.isBlank(content)) {
+			return false;
+		}
 
-        if (nullValue.equalsIgnoreCase(StringUtils.deleteWhitespace(content))) {
-            return false;
-        }
+		if (nullValue.equalsIgnoreCase(StringUtils.deleteWhitespace(content))) {
+			return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    /**
-     * ¼ì²â×Ö·û´®ÊÇ·ñºÏ·¨£¨È¡Öµ·¶Î§ÎªÊı×ÖºÍ×ÖÄ¸£©
-     * @param content
-     * @return
-     */
-    public static boolean check09AZStringValid(String content) {
-        // ASCIIÖĞµÄ×ÖÄ¸Çø·Ö´óĞ¡Ğ´
-        content = content.toUpperCase();
+	/**
+	 * æ£€æµ‹å­—ç¬¦ä¸²æ˜¯å¦åˆæ³•ï¼ˆå–å€¼èŒƒå›´ä¸ºæ•°å­—å’Œå­—æ¯ï¼‰
+	 * 
+	 * @param content
+	 * @return
+	 */
+	public static boolean check09AZStringValid(String content) {
+		// ASCIIä¸­çš„å­—æ¯åŒºåˆ†å¤§å°å†™
+		content = content.toUpperCase();
 
-        for(int i = 0; i < content.length(); i++) {
-            // È¡Öµ·¶Î§0-9£¬A-Z
-            if (content.charAt(i) < 0x30 || (content.charAt(i) > 0x39 && content.charAt(i) < 0x41) || content.charAt(i) > 0x5a) {
-                return false;
-            }
-        }
-        return true;
-    }
+		for (int i = 0; i < content.length(); i++) {
+			// å–å€¼èŒƒå›´0-9ï¼ŒA-Z
+			if (content.charAt(i) < 0x30 || (content.charAt(i) > 0x39 && content.charAt(i) < 0x41)
+					|| content.charAt(i) > 0x5a) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-    /**
-     * ¼ì²â×Ö·û´®ÄÚÈİºÍ³¤¶ÈÊÇ·ñºÏ·¨£¨È¡Öµ·¶Î§ÎªÊı×ÖºÍ×ÖÄ¸£©
-     * @param content
-     * @param length
-     * @return
-     */
-    public static boolean check09AZStringValidWithLength(String content, int length) {
-        if (!checkNotNullOrNullStr(content)) {
-            return false;
-        }
+	/**
+	 * æ£€æµ‹å­—ç¬¦ä¸²å†…å®¹å’Œé•¿åº¦æ˜¯å¦åˆæ³•ï¼ˆå–å€¼èŒƒå›´ä¸ºæ•°å­—å’Œå­—æ¯ï¼‰
+	 * 
+	 * @param content
+	 * @param length
+	 * @return
+	 */
+	public static boolean check09AZStringValidWithLength(String content, int length) {
+		if (!checkNotNullOrNullStr(content)) {
+			return false;
+		}
 
-        if (content.length() != length) {
-            return false;
-        }
+		if (content.length() != length) {
+			return false;
+		}
 
-        return check09AZStringValid(content);
-    }
+		return check09AZStringValid(content);
+	}
 
-    public static String calcDateDiff(Date startDatetime, Date stopDatetime) {
-        if (startDatetime == null || stopDatetime == null) {
-            return "";
-        }
+	public static String calcDateDiff(Date startDatetime, Date stopDatetime) {
+		if (startDatetime == null || stopDatetime == null) {
+			return "";
+		}
 
-        Interval interval = new Interval(startDatetime.getTime(), stopDatetime.getTime());
-        Period datePeriod = interval.toPeriod();
+		Interval interval = new Interval(startDatetime.getTime(), stopDatetime.getTime());
+		Period datePeriod = interval.toPeriod();
 
-        StringBuilder diffDesc = new StringBuilder();
-        if (datePeriod.getYears() > 0) {
-            diffDesc.append(datePeriod.getYears()).append("Äê");
-        }
-        if (datePeriod.getMonths() > 0) {
-            diffDesc.append(datePeriod.getMonths()).append("ÔÂ");
-        }
+		StringBuilder diffDesc = new StringBuilder();
+		if (datePeriod.getYears() > 0) {
+			diffDesc.append(datePeriod.getYears()).append("å¹´");
+		}
 
-        if (datePeriod.getDays() > 0) {
-            diffDesc.append(datePeriod.getDays()).append("ÈÕ");
-        }
+		if (datePeriod.getMonths() > 0) {
+			diffDesc.append(datePeriod.getMonths()).append("æœˆ");
+		}
 
-        if (datePeriod.getHours() > 0) {
-            diffDesc.append(datePeriod.getHours()).append("Ğ¡Ê±");
-        }
-        if (datePeriod.getMinutes() > 0) {
-            diffDesc.append(datePeriod.getMinutes()).append("·ÖÖÓ");
-        }
-        if (datePeriod.getSeconds() > 0) {
-            diffDesc.append(datePeriod.getSeconds()).append("Ãë");
-        }
-        return diffDesc.toString();
-    }
-    public static int mysqlObject2Int(Object value){
-        if (value == null) {
-            return 0;
-        }
-        return Integer.parseInt(String.valueOf((Object) value));
-    }
+		if (datePeriod.getDays() > 0) {
+			diffDesc.append(datePeriod.getDays()).append("æ—¥");
+		}
+
+		if (datePeriod.getHours() > 0) {
+			diffDesc.append(datePeriod.getHours()).append("å°æ—¶");
+		}
+
+		if (datePeriod.getMinutes() > 0) {
+			diffDesc.append(datePeriod.getMinutes()).append("åˆ†é’Ÿ");
+		}
+
+		if (datePeriod.getSeconds() > 0) {
+			diffDesc.append(datePeriod.getSeconds()).append("ç§’");
+		}
+
+		return diffDesc.toString();
+	}
+
+	public static int mysqlObject2Int(Object value) {
+		if (value == null) {
+			return 0;
+		}
+		return Integer.parseInt(String.valueOf((Object) value));
+	}
 }

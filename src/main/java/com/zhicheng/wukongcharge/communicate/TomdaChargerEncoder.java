@@ -24,12 +24,7 @@ public class TomdaChargerEncoder extends MessageToByteEncoder<Object> {
 	protected void encode(ChannelHandlerContext ctx, Object message, ByteBuf out) {
 		try {
 			String commonde = (String) message;
-//			System.out.println(commonde);
-//			System.out.println(message);
-//			System.out.println(TomdaChargerServerHandler.NETTY_CHANNEL_KEY);
-//			System.out.println(ctx.channel().attr(TomdaChargerServerHandler.NETTY_CHANNEL_KEY).get());
 			KeyAttach keyAttach = ctx.channel().attr(TomdaChargerServerHandler.NETTY_CHANNEL_KEY).get();
-//			System.out.println(keyAttach);
 			out.writeBytes(commonde.getBytes("ISO-8859-1"));
 			System.out.println(" - ^_^ Write back, " + keyAttach.getRouterSerialNum() + ", "
 					+ Tool.formatDateTime(new Date()) + " = " + Tool.showData(commonde));

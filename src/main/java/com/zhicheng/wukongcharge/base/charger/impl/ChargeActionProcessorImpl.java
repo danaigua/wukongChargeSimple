@@ -23,7 +23,8 @@ public class ChargeActionProcessorImpl implements IChargeActionProcessor {
 		TomdaChargeActionProcessor t = new TomdaChargeActionProcessor();
 //		t.wukongChargeLogin(context);
 		try {
-			t.loginRequest(context, procotolContent.getMsgId());
+//			t.loginRequest(context, procotolContent.getMsgId(), "2018873124");
+			t.instruct3(context, procotolContent.getMsgId(), "2018873124", procotolContent.getDataType(), procotolContent);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

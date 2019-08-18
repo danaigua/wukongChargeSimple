@@ -56,6 +56,7 @@ public class TomdaChargerServerHandler extends SimpleChannelInboundHandler<Tomda
 //            }
             ChargeActionProcessorImpl processorTest = new ChargeActionProcessorImpl();
             processorTest.processModel(procotolContent, context);
+            
 //            processor.processModel(procotolContent, context);
         } catch (Exception e) {
         	e.printStackTrace();

@@ -1113,7 +1113,7 @@ public final class VariableCharacteristicsTypeProto {
       }
       /**
        * <pre>
-       *属�?��?�单�?
+       *属性值单位
        * </pre>
        *
        * <code>required string units = 1;</code>
@@ -1130,7 +1130,7 @@ public final class VariableCharacteristicsTypeProto {
       }
       /**
        * <pre>
-       *属�?��?�单�?
+       *属性值单位
        * </pre>
        *
        * <code>required string units = 1;</code>
@@ -1143,7 +1143,7 @@ public final class VariableCharacteristicsTypeProto {
       }
       /**
        * <pre>
-       *属�?��?�单�?
+       *属性值单位
        * </pre>
        *
        * <code>required string units = 1;</code>
@@ -1162,7 +1162,7 @@ public final class VariableCharacteristicsTypeProto {
       private int dataType_ = 0;
       /**
        * <pre>
-       *属�?�数据类�?
+       *属性值单位
        * </pre>
        *
        * <code>required .variableCharacteristicsType.DateEnumType dataType = 2;</code>
@@ -1172,7 +1172,7 @@ public final class VariableCharacteristicsTypeProto {
       }
       /**
        * <pre>
-       *属�?�数据类�?
+       *属性值单位
        * </pre>
        *
        * <code>required .variableCharacteristicsType.DateEnumType dataType = 2;</code>
@@ -1184,7 +1184,7 @@ public final class VariableCharacteristicsTypeProto {
       }
       /**
        * <pre>
-       *属�?�数据类�?
+       *属性数据类型
        * </pre>
        *
        * <code>required .variableCharacteristicsType.DateEnumType dataType = 2;</code>
@@ -1200,7 +1200,7 @@ public final class VariableCharacteristicsTypeProto {
       }
       /**
        * <pre>
-       *属�?�数据类�?
+       *属性数据类型
        * </pre>
        *
        * <code>required .variableCharacteristicsType.DateEnumType dataType = 2;</code>
@@ -1215,7 +1215,7 @@ public final class VariableCharacteristicsTypeProto {
       private int minLimit_ ;
       /**
        * <pre>
-       *默认固定�?小�??
+       *默认固定最小值
        * </pre>
        *
        * <code>optional int32 minLimit = 3;</code>
@@ -1225,7 +1225,7 @@ public final class VariableCharacteristicsTypeProto {
       }
       /**
        * <pre>
-       *默认固定�?小�??
+       *默认固定最小值
        * </pre>
        *
        * <code>optional int32 minLimit = 3;</code>
@@ -1235,7 +1235,7 @@ public final class VariableCharacteristicsTypeProto {
       }
       /**
        * <pre>
-       *默认固定�?小�??
+       *默认固定最小值
        * </pre>
        *
        * <code>optional int32 minLimit = 3;</code>
@@ -1248,7 +1248,7 @@ public final class VariableCharacteristicsTypeProto {
       }
       /**
        * <pre>
-       *默认固定�?小�??
+       *默认固定最小值
        * </pre>
        *
        * <code>optional int32 minLimit = 3;</code>

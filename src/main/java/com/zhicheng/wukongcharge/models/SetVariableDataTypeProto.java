@@ -843,7 +843,7 @@ public final class SetVariableDataTypeProto {
       }
       /**
        * <pre>
-       *设置属�?��?�类�?,当前值Actual，最小�?�MinSet，最大�?�MaxSet
+       *设置属性值类型,当前值Actual，最小值MinSet，最大值MaxSet
        * </pre>
        *
        * <code>required .attributeEnumType attributeType = 1;</code>
@@ -859,7 +859,7 @@ public final class SetVariableDataTypeProto {
       }
       /**
        * <pre>
-       *设置属�?��?�类�?,当前值Actual，最小�?�MinSet，最大�?�MaxSet
+       *设置属性值类型,当前值Actual，最小值MinSet，最大值MaxSet
        * </pre>
        *
        * <code>required .attributeEnumType attributeType = 1;</code>
